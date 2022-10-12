@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Flasher\Prime\FlasherInterface;
 
+//Crud controller
 /**
  *@Route("/post", name="post.")
 *
