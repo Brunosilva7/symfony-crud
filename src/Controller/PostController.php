@@ -3,13 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Form\PostType;
 use App\Repository\PostRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Flasher\Prime\FlasherInterface;
 
 //Crud controller
 /**
@@ -44,17 +44,27 @@ class PostController extends AbstractController
 
         $post = new Post();
 
-        $post->setTitle('This is the title!');
+        //getting the object inside the form
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+        $form->getErrors();
+        if($form->isSubmitted() && $form->isValid()){
+            //entity manager
+            $em = $this->doctrine->getManager();
+            $em -> persist($post);
+            $em->flush();
+
+            $this->addFlash('success', 'The form was submitted successfully!');
+            return $this->redirect($this->generateUrl('post.index'));
+
+        }
 
 
-        //entity manager
-        $em = $this->doctrine->getManager();
-        $em -> persist($post);
-        $em->flush();
         // if your controller extends the AbstractController class
-        return $this->addFlash('success', 'Your post were created!');
-        return $this->redirect($this->generateUrl('post.index'));
-     }
+        return $this->render('post/create.html.twig',[
+            "form" => $form->createView(),
+        ]);
+    }
 
      /**
      *@Route("/show/{id}", name="show")
@@ -68,6 +78,7 @@ class PostController extends AbstractController
      }
 
      /**
+      *
       * @Route("/delete/{id}", name="delete")
       */
      public function remove(Post $post) {
@@ -75,16 +86,11 @@ class PostController extends AbstractController
         $em->remove($post);
         $em->flush();
 
+        $this->addFlash('success', 'Post was removed successfully');
         return $this->redirect($this->generateUrl('post.index'));
+
      }
 
-     public function save(FlasherInterface $flasher): Response
-     {
-         // ...
 
-         $flasher->addSuccess('Book saved successfully');
-
-         return $this->render('book/index.html.twig');
-     }
 
 }
