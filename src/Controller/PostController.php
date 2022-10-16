@@ -47,8 +47,7 @@ class PostController extends AbstractController
         //getting the object inside the form
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
-        $form->getErrors();
-        if($form->isSubmitted() && $form->isValid()){
+        if($form->isSubmitted()){
             //entity manager
             $em = $this->doctrine->getManager();
             $em -> persist($post);

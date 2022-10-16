@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
-use Symfony\Component\Validator\Constraints as Assert;
+// use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 //main entity
@@ -13,7 +13,7 @@ class Post
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[Assert\NotBlank]
+    // #[Assert\NotBlank]
     #[ORM\Column]
     private ?int $id = null;
 
